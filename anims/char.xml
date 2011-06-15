@@ -1,0 +1,6 @@
+<animation name="DownIdle" start="0" end="0" rate="0"/>
+<animation name="UpIdle" start="3" end="3" rate="0"/>
+<animation name="SideIdle" start="6" end="6" rate="0"/>
+<animation name="DownWalk" start="1" end="2" rate="2"/>
+<animation name="UpWalk" start="4" end="5" rate="2"/>
+<animation name="SideWalk" start="7" end="8" rate="2"/>
