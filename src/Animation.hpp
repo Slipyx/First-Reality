@@ -29,7 +29,7 @@
 class Animation
 {
 public:
-    Animation(std::string name, char start, char end, char rate);
+    Animation(std::string name, char start, char end, char rate, std::string mode);
     ~Animation();
 
     void Update(const float& dt);
@@ -41,6 +41,8 @@ private:
     char mEnd;
     char mRate;
     float cur;
+    std::string mMode;
+    bool bForward;
 };
 
 #endif

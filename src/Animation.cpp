@@ -23,20 +23,46 @@
 
 #include "Animation.hpp"
 
-Animation::Animation(std::string name, char start, char end, char rate)
+Animation::Animation(std::string name, char start, char end, char rate, std::string mode)
 {
     mName = name;
     mStart = start;
     mEnd = end;
     mRate = rate;
     cur = start;
+    mMode = mode;
+    bForward = true;
 }
 
 void Animation::Update(const float& dt)
 {
-    cur += (mRate * dt);
-    if(cur >= mEnd + 1) {
-        cur = mStart;
+    if(mMode == "loop") {
+        cur += (mRate * dt);
+        if(cur >= mEnd + 1) {
+            cur = mStart;
+        }
+    }
+    else if(mMode == "pong") {
+        if(bForward) {
+            cur += (mRate * dt);
+            if(cur >= mEnd + 1) {
+                cur = mEnd;
+                bForward = false;
+            }
+        }
+        else {
+            cur -= (mRate * dt);
+            if(cur <= mStart) {
+                cur = float(mStart) + 1.0f;
+                bForward = true;
+            }
+        }
+    }
+    else if(mMode == "once") {
+        cur += (mRate * dt);
+        if(cur >= mEnd + 1) {
+            cur = mEnd;
+        }
     }
 }
 

@@ -60,7 +60,8 @@ Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Ac
                 int aStart = xml->getAttributeValueAsInt("start");
                 int aEnd = xml->getAttributeValueAsInt("end");
                 int aRate = xml->getAttributeValueAsInt("rate");
-                animSet.push_back(new Animation(aName, aStart, aEnd, aRate));
+                std::string aMode = xml->getAttributeValue("mode");
+                animSet.push_back(new Animation(aName, aStart, aEnd, aRate, aMode));
             }
             break;
         }
@@ -93,10 +94,12 @@ void Player::Update(const float& dt)
         else if(mInput.IsKeyDown(sf::Key::Up)) {
             mTargetPos.y = mPos.y - Map::TILE_SIZE;
             mFacingDir = FACING_UP;
+            sprPlayer.FlipX(false);
         }
         else if(mInput.IsKeyDown(sf::Key::Down)) {
             mTargetPos.y = mPos.y + Map::TILE_SIZE;
             mFacingDir = FACING_DOWN;
+            sprPlayer.FlipX(false);
         }
         else {
             SwitchIdleAnimation();
