@@ -22,6 +22,7 @@
  */
 
 #include "Player.hpp"
+#include "irrxml/irrXML.h"
 #include <iostream>
 
 Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Actor(app, map)
@@ -36,20 +37,49 @@ Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Ac
             rectMap[(ry / tHeight) * (imgSheet.GetHeight() / tHeight) + (rx / tWidth)] = sf::IntRect(rx, ry, tWidth, tHeight);
         }
     }
+
     mFacingDir = FACING_DOWN;
     mSpeed.x = 64.0f, mSpeed.y = 64.0f;
     mPos.x = startX, mPos.y = startY;
     mTargetPos = mPos;
 	mSteps = 0;
     sprPlayer.SetPosition(mPos + sf::Vector2f(-(tWidth / 2.0f), -float(tHeight)));
+
+    // ********************************
+    // Load animation set
+    std::string animFile = "char";
+    // XML parser object for animation file
+    irr::io::IrrXMLReader* xml = irr::io::createIrrXMLReader(("anims/" + animFile + ".xml").c_str());
+    // ********************************
+    // Parse the animation file!
+    while(xml && xml->read()) {
+        switch(xml->getNodeType()) {
+        case irr::io::EXN_ELEMENT:
+            if(!strcmp("animation", xml->getNodeName())) {
+                std::string aName = xml->getAttributeValue("name");
+                int aStart = xml->getAttributeValueAsInt("start");
+                int aEnd = xml->getAttributeValueAsInt("end");
+                int aRate = xml->getAttributeValueAsInt("rate");
+                animSet.push_back(new Animation(aName, aStart, aEnd, aRate));
+            }
+            break;
+        }
+    }
+    // Delete XML parser object
+    delete xml;
+    // Done parsing!
+
+    SwitchIdleAnimation();
 }
 
 void Player::Update(const float& dt)
 {
+    curAnim->Update(dt);
     // Capture input system
     const sf::Input& mInput = mApp->GetInput();
     // Check for input and adjust target pos
     if(mPos == mTargetPos) {
+        // Input
         if(mInput.IsKeyDown(sf::Key::Left)) {
             mTargetPos.x = mPos.x - Map::TILE_SIZE;
             mFacingDir = FACING_LEFT;
@@ -67,6 +97,9 @@ void Player::Update(const float& dt)
         else if(mInput.IsKeyDown(sf::Key::Down)) {
             mTargetPos.y = mPos.y + Map::TILE_SIZE;
             mFacingDir = FACING_DOWN;
+        }
+        else {
+            SwitchIdleAnimation();
         }
     }
     // Move towards target position if not going to collide
@@ -89,6 +122,19 @@ void Player::Update(const float& dt)
             mPos.y += mSpeed.y * dt;
             if(mPos.y > mTargetPos.y) { mPos.y = mTargetPos.y; mSteps++; }
         }
+        // Switch animation
+        switch(mFacingDir) {
+        case FACING_DOWN:
+            curAnim = animSet[3];
+            break;
+        case FACING_UP:
+            curAnim = animSet[4];
+            break;
+        case FACING_LEFT:
+        case FACING_RIGHT:
+            curAnim = animSet[5];
+            break;
+        }
         //std::cout << "Player pos: " << mPos.x << ", " << mPos.y << '\n';
         sprPlayer.SetPosition(mPos + sf::Vector2f(-(tWidth / 2.0f), -float(tHeight)));
 		//std::cout << "Steps: " << mSteps << '\n';
@@ -97,8 +143,26 @@ void Player::Update(const float& dt)
 
 void Player::Draw()
 {
-    sprPlayer.SetSubRect(rectMap[(mFacingDir > 2 ? 2 : mFacingDir) * (imgSheet.GetWidth() / tWidth)]);
+    sprPlayer.SetSubRect(rectMap[curAnim->GetCur()]);
+    //sprPlayer.SetSubRect(rectMap[(mFacingDir > 2 ? 2 : mFacingDir) * (imgSheet.GetWidth() / tWidth)]);
     mApp->Draw(sprPlayer);
+}
+
+void Player::SwitchIdleAnimation()
+{
+    // Switch to idle animation depending on facing direction
+    switch(mFacingDir) {
+    case FACING_DOWN:
+        curAnim = animSet[0];
+        break;
+    case FACING_UP:
+        curAnim = animSet[1];
+        break;
+    case FACING_LEFT:
+    case FACING_RIGHT:
+        curAnim = animSet[2];
+        break;
+    }
 }
 
 bool Player::CheckCollisions()
@@ -121,47 +185,51 @@ bool Player::CheckCollisions()
         break;
     }
     const unsigned char* mapColLayer = mMap->GetCollisionLayer();
+    bool bCollide = false;
+
     // Check against map outter boundries
     if(mTargetPos.x < 0.0f || mTargetPos.x > mMap->GetWidth() * Map::TILE_SIZE ||
        mTargetPos.y < 0.0f || mTargetPos.y > mMap->GetHeight() * Map::TILE_SIZE) {
-        mTargetPos = mPos;
-		return true;
+        bCollide = true;
 	}
     // Check target position against map's collision layer
     // Full collision tile
     else if(mapColLayer[tPosIndex] == 1) {
-        mTargetPos = mPos;
-		return true;
+        bCollide = true;
 	}
     // Bottom collision tile
 	else if(mapColLayer[tPosIndex] == 2 && mFacingDir == FACING_UP ||
          mapColLayer[cPosIndex] == 2 && mFacingDir == FACING_DOWN) {
-        mTargetPos = mPos;
-        return true;
+        bCollide = true;
 	}
 	// Top collision tile
 	else if(mapColLayer[tPosIndex] == 3 && mFacingDir == FACING_DOWN ||
          mapColLayer[cPosIndex] == 3 && mFacingDir == FACING_UP) {
-	    mTargetPos = mPos;
-	    return true;
+	    bCollide = true;
 	}
 	// Right collision tile
 	else if(mapColLayer[tPosIndex] == 4 && mFacingDir == FACING_LEFT ||
          mapColLayer[cPosIndex] == 4 && mFacingDir == FACING_RIGHT) {
-        mTargetPos = mPos;
-        return true;
+        bCollide = true;
 	}
 	// Left collision tile
 	else if(mapColLayer[tPosIndex] == 5 && mFacingDir == FACING_RIGHT ||
          mapColLayer[cPosIndex] == 5 && mFacingDir == FACING_LEFT) {
-	    mTargetPos = mPos;
-	    return true;
+	    bCollide = true;
 	}
-	else
-		return false;
+
+    if(bCollide) {
+        mTargetPos = mPos;
+        SwitchIdleAnimation();
+    }
+
+    return bCollide;
 }
 
 Player::~Player()
 {
+    delete curAnim;
+    for(unsigned int i = 0; i < animSet.size(); ++i)
+        delete animSet[i];
     delete[] rectMap;
 }

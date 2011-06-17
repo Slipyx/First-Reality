@@ -21,39 +21,30 @@
  * distribution.
  */
 
-#ifndef PLAYER_H
-#define PLAYER_H
-
-#include "Actor.hpp"
 #include "Animation.hpp"
 
-enum eFacingDir {
-    FACING_DOWN, FACING_UP, FACING_LEFT, FACING_RIGHT
-};
-
-class Player : public Actor
+Animation::Animation(std::string name, char start, char end, char rate)
 {
-public:
-    Player(sf::RenderWindow& app, Map* map, float startX, float startY);
-    virtual ~Player();
+    mName = name;
+    mStart = start;
+    mEnd = end;
+    mRate = rate;
+    cur = start;
+}
 
-    virtual void Update(const float& dt);
-    virtual void Draw();
+void Animation::Update(const float& dt)
+{
+    cur += (mRate * dt);
+    if(cur >= mEnd + 1) {
+        cur = mStart;
+    }
+}
 
-private:
-    sf::Image imgSheet;
-    sf::Sprite sprPlayer;
-    sf::IntRect* rectMap;
-    sf::Vector2f mSpeed;
-    sf::Vector2f mTargetPos;
-    eFacingDir mFacingDir;
-	unsigned short mSteps;
+int Animation::GetCur()
+{
+    return int(cur);
+}
 
-    std::vector<Animation*> animSet;
-    Animation* curAnim;
-
-    void SwitchIdleAnimation();
-    bool CheckCollisions();
-};
-
-#endif
+Animation::~Animation()
+{
+}
