@@ -26,9 +26,11 @@
 
 #include <SFML/Graphics.hpp>
 #include "Actor.hpp"
+#include "PlayerMenu.hpp"
 
 class Actor;
 class Player;
+class PlayerMenu;
 
 class Map
 {
@@ -38,8 +40,10 @@ public:
 
     static const unsigned char TILE_SIZE = 16;
 
+    void Keypressed(sf::Key::Code key);
     void Update(const float& dt);
     void Draw();
+    void DrawUI();
     unsigned char GetWidth();
     unsigned char GetHeight();
     const unsigned char* GetCollisionLayer();
@@ -58,6 +62,8 @@ private:
     unsigned char* layerCol;
 
     Player* player;
+    PlayerMenu* playerMenu;
+    bool bShowPlayerMenu;
 
     bool TileIsBehindActor(unsigned int tx, unsigned int ty, Actor* actor);
     void DrawLayer(unsigned char* layer, char mode = 0); // 0 = all tiles, 1 = only behind actors, 2 = all except behind actors

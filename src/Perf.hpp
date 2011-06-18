@@ -39,7 +39,6 @@ private:
     sf::RenderWindow* mApp;
     sf::View* mUiView;
     // FPS display
-    sf::Font font;
     sf::Text txtFps;
     sf::Clock fpsUdateTimer;
 };

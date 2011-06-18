@@ -22,14 +22,15 @@
  */
 
 #include "Perf.hpp"
+#include "FontManager.hpp"
 #include <sstream>
 
 Perf::Perf(sf::RenderWindow& app, sf::View& uiView)
 {
     mApp = &app;
     mUiView = &uiView;
-    font.LoadFromFile("fonts/DroidSans.ttf"); // TODO: Get from font manager
-    txtFps.SetFont(font);
+    //font.LoadFromFile("fonts/DroidSans.ttf"); // TODO: Get from font manager
+    txtFps.SetFont(FontManager::GetFont("DroidSans.ttf"));
     txtFps.SetString("0 FPS");
     txtFps.SetCharacterSize(10);
     txtFps.SetPosition(mUiView->GetSize().x - txtFps.GetRect().Width - 2.0f, 0.0f); // Align on right hand of view

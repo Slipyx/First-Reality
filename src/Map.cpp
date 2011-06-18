@@ -108,44 +108,65 @@ Map::Map(sf::RenderWindow& app, sf::View& gView, std::string fileName)
     // ********************************
     // Load and start player
     player = new Player(app, this, float(pStartX), float(pStartY)); // (Exact grid points) Please don't use decimals here :D
+    playerMenu = new PlayerMenu(app, player);
     // Center view on player
     mGView->SetCenter(player->GetPos());
 
     std::cout << "Map loaded in " << mapLoadTimer.GetElapsedTime() << " ms!\n";
 }
 
+void Map::Keypressed(sf::Key::Code key)
+{
+    if(key == sf::Key::Q) {
+        bShowPlayerMenu = !bShowPlayerMenu;
+    }
+}
+
 void Map::Update(const float& dt)
 {
-    player->Update(dt);
-    // Constrain game view to map boundries
-    sf::Vector2f boundedCenter = player->GetPos();
-    float gViewHalfWidth = mGView->GetSize().x / 2.0f;
-    float gViewHalfHeight = mGView->GetSize().y / 2.0f;
+    if(bShowPlayerMenu) {
+        playerMenu->Update(dt);
+    }
+    else {
+        player->Update(dt);
+        // Constrain game view to map boundries
+        sf::Vector2f boundedCenter = player->GetPos();
+        float gViewHalfWidth = mGView->GetSize().x / 2.0f;
+        float gViewHalfHeight = mGView->GetSize().y / 2.0f;
 
-    // X left
-    if(boundedCenter.x < gViewHalfWidth)
-        boundedCenter.x = gViewHalfWidth;
-    // X right
-    else if(boundedCenter.x > width * TILE_SIZE - gViewHalfWidth)
-        boundedCenter.x = width * TILE_SIZE - gViewHalfWidth;
-    // Y top
-    if(boundedCenter.y < gViewHalfHeight)
-        boundedCenter.y = gViewHalfHeight;
-    // Y bottom
-    else if(boundedCenter.y > height * TILE_SIZE - gViewHalfHeight)
-        boundedCenter.y = height * TILE_SIZE - gViewHalfHeight;
+        // X left
+        if(boundedCenter.x < gViewHalfWidth)
+            boundedCenter.x = gViewHalfWidth;
+        // X right
+        else if(boundedCenter.x > width * TILE_SIZE - gViewHalfWidth)
+            boundedCenter.x = width * TILE_SIZE - gViewHalfWidth;
+        // Y top
+        if(boundedCenter.y < gViewHalfHeight)
+            boundedCenter.y = gViewHalfHeight;
+        // Y bottom
+        else if(boundedCenter.y > height * TILE_SIZE - gViewHalfHeight)
+            boundedCenter.y = height * TILE_SIZE - gViewHalfHeight;
 
-    mGView->SetCenter(boundedCenter);
+        mGView->SetCenter(boundedCenter);
+    }
 }
 
 void Map::Draw()
 {
-    DrawLayer(layerBG);
-    DrawLayer(layerFG, 1);
-    player->Draw();
-    DrawLayer(layerFG, 2);
-    //DrawCollisions();
-    //DrawGrid();
+    if(!bShowPlayerMenu) {
+        DrawLayer(layerBG);
+        DrawLayer(layerFG, 1);
+        player->Draw();
+        DrawLayer(layerFG, 2);
+        //DrawCollisions();
+        //DrawGrid();
+    }
+}
+
+void Map::DrawUI()
+{
+    if(bShowPlayerMenu)
+        playerMenu->Draw();
 }
 
 bool Map::TileIsBehindActor(unsigned int tx, unsigned int ty, Actor* actor)
@@ -261,6 +282,7 @@ const unsigned char* Map::GetCollisionLayer()
 
 Map::~Map()
 {
+    delete playerMenu;
     delete player;
     delete[] layerCol;
     delete[] layerFG;

@@ -21,43 +21,15 @@
  * distribution.
  */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef FONT_MANAGER_H
+#define FONT_MANAGER_H
 
-#include "Actor.hpp"
-#include "Animation.hpp"
+#include <SFML/Graphics.hpp>
 
-enum eFacingDir {
-    FACING_DOWN, FACING_UP, FACING_LEFT, FACING_RIGHT
-};
-
-class Player : public Actor
+class FontManager
 {
 public:
-    Player(sf::RenderWindow& app, Map* map, float startX, float startY);
-    virtual ~Player();
-
-    virtual void Update(const float& dt);
-    virtual void Draw();
-
-    // Gets and Sets
-    unsigned short GetSteps() { return mSteps; }
-
-private:
-    sf::Image imgSheet;
-    sf::Sprite sprPlayer;
-    sf::IntRect* rectMap;
-    sf::Vector2f mSpeed;
-    sf::Vector2f mTargetPos;
-    eFacingDir mFacingDir;
-	unsigned short mSteps;
-
-    std::vector<Animation*> animSet;
-    Animation* curAnim;
-
-    void UpdateMovement(const float& dt);
-    void SwitchIdleAnimation();
-    bool CheckCollisions();
+    static const sf::Font& GetFont(const std::string& file);
 };
 
 #endif

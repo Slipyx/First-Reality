@@ -21,43 +21,26 @@
  * distribution.
  */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef PLAYER_MENU_H
+#define PLAYER_MENU_H
 
+#include <SFML/Graphics.hpp>
 #include "Actor.hpp"
-#include "Animation.hpp"
 
-enum eFacingDir {
-    FACING_DOWN, FACING_UP, FACING_LEFT, FACING_RIGHT
-};
+class Player;
 
-class Player : public Actor
+class PlayerMenu
 {
 public:
-    Player(sf::RenderWindow& app, Map* map, float startX, float startY);
-    virtual ~Player();
-
-    virtual void Update(const float& dt);
-    virtual void Draw();
-
-    // Gets and Sets
-    unsigned short GetSteps() { return mSteps; }
+    PlayerMenu(sf::RenderWindow& app, Player* player);
+    void Update(const float& dt);
+    void Draw();
 
 private:
-    sf::Image imgSheet;
-    sf::Sprite sprPlayer;
-    sf::IntRect* rectMap;
-    sf::Vector2f mSpeed;
-    sf::Vector2f mTargetPos;
-    eFacingDir mFacingDir;
-	unsigned short mSteps;
+    sf::RenderWindow* mApp;
+    Player* mPlayer;
 
-    std::vector<Animation*> animSet;
-    Animation* curAnim;
-
-    void UpdateMovement(const float& dt);
-    void SwitchIdleAnimation();
-    bool CheckCollisions();
+    sf::Text txtSteps;
 };
 
 #endif

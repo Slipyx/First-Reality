@@ -21,43 +21,28 @@
  * distribution.
  */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#include "FontManager.hpp"
+#include <iostream>
 
-#include "Actor.hpp"
-#include "Animation.hpp"
+std::map<std::string, sf::Font> mFonts;
 
-enum eFacingDir {
-    FACING_DOWN, FACING_UP, FACING_LEFT, FACING_RIGHT
-};
-
-class Player : public Actor
+const sf::Font& FontManager::GetFont(const std::string& file)
 {
-public:
-    Player(sf::RenderWindow& app, Map* map, float startX, float startY);
-    virtual ~Player();
+    for(std::map<std::string, sf::Font>::const_iterator it = mFonts.begin(); it != mFonts.end(); ++it) {
+        if(file == it->first) {
+            std::cout << "Using existing font...\n";
+            return it->second;
+        }
+    }
 
-    virtual void Update(const float& dt);
-    virtual void Draw();
+    sf::Font font;
+    if(font.LoadFromFile("fonts/" + file)) {
+        mFonts[file] = font;
+        std::cout << "Loaded new font...\n";
+        return mFonts[file];
+    }
 
-    // Gets and Sets
-    unsigned short GetSteps() { return mSteps; }
-
-private:
-    sf::Image imgSheet;
-    sf::Sprite sprPlayer;
-    sf::IntRect* rectMap;
-    sf::Vector2f mSpeed;
-    sf::Vector2f mTargetPos;
-    eFacingDir mFacingDir;
-	unsigned short mSteps;
-
-    std::vector<Animation*> animSet;
-    Animation* curAnim;
-
-    void UpdateMovement(const float& dt);
-    void SwitchIdleAnimation();
-    bool CheckCollisions();
-};
-
-#endif
+    std::cout << "ERROR: Font not found!\n";
+    mFonts[file] = font;
+    return mFonts[file];
+}

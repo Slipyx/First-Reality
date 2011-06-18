@@ -75,6 +75,7 @@ void Game::Update(const float& dt)
         if(event.Type == sf::Event::KeyPressed)
         {
             // Fire keypressed callbacks
+            map->Keypressed(event.Key.Code);
             if(event.Key.Code == sf::Key::A)
             {
                 std::cout << Randomizer::RandomRange(0, 255) << '\n';
@@ -106,6 +107,7 @@ void Game::Draw()
     app.SetView(uiView);
 
 	// Draw UI objects
+    map->DrawUI();
     perf->Draw();
 
 	// Swap buffers

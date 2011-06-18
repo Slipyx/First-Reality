@@ -147,7 +147,6 @@ void Player::Update(const float& dt)
 void Player::Draw()
 {
     sprPlayer.SetSubRect(rectMap[curAnim->GetCur()]);
-    //sprPlayer.SetSubRect(rectMap[(mFacingDir > 2 ? 2 : mFacingDir) * (imgSheet.GetWidth() / tWidth)]);
     mApp->Draw(sprPlayer);
 }
 
