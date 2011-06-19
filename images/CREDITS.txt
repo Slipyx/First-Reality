@@ -4,6 +4,12 @@ playerSheet.png
   - Source: http://opengameart.org/content/a-load-of-overworld-34-rpg-sprites
 
 tileset01.png
+  * Indoor tiles
   - License: CC-BY 3.0
   - By: Redshrike (Stephen Challener)
   - Source: http://opengameart.org/content/16x16-indoor-rpg-tileset-the-baseline
+
+  * Castle tiles
+  - License: CC-BY 3.0
+  - By: Redshrike (Stephen Challener)
+  - Source: http://opengameart.org/content/32x32-rpg-tiles-forest-and-some-interior-tiles
