@@ -109,6 +109,7 @@ Map::Map(sf::RenderWindow& app, sf::View& gView, std::string fileName)
     // Load and start player
     player = new Player(app, this, float(pStartX), float(pStartY)); // (Exact grid points) Please don't use decimals here :D
     playerMenu = new PlayerMenu(app, player);
+	bShowPlayerMenu = false;
     // Center view on player
     mGView->SetCenter(player->GetPos());
 
