@@ -21,31 +21,15 @@
  * distribution.
  */
 
-#ifndef PLAYER_MENU_H
-#define PLAYER_MENU_H
+#ifndef IMAGE_MANAGER_H
+#define IMAGE_MANAGER_H
 
 #include <SFML/Graphics.hpp>
-#include "Actor.hpp"
 
-class Player;
-
-class PlayerMenu
+class ImageManager
 {
 public:
-    PlayerMenu(sf::RenderWindow& app, Player* player);
-    void Keypressed(sf::Key::Code key);
-    void Update(const float& dt);
-    void Draw();
-
-private:
-    sf::RenderWindow* mApp;
-    Player* mPlayer;
-
-    sf::Text txtMenuItms;
-    sf::Text txtSteps;
-
-    sf::Sprite sprCursor;
-    char curSelection;
+    static const sf::Image& GetImage(const std::string& file);
 };
 
 #endif

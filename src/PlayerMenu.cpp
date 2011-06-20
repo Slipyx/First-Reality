@@ -23,6 +23,7 @@
 
 #include "PlayerMenu.hpp"
 #include "Player.hpp"
+#include "ImageManager.hpp"
 #include "FontManager.hpp"
 #include <sstream>
 
@@ -31,26 +32,66 @@ PlayerMenu::PlayerMenu(sf::RenderWindow& app, Player* player)
     mApp = &app;
     mPlayer = player;
 
+    txtMenuItms.SetFont(FontManager::GetFont("DroidSans.ttf"));
+    txtMenuItms.SetString("Items\nSkills\nEquip\nStats\nQuit");
+    txtMenuItms.SetCharacterSize(10);
+    txtMenuItms.SetColor(sf::Color(255, 255, 255));
+
     txtSteps.SetFont(FontManager::GetFont("DroidSans.ttf"));
-    txtSteps.SetString("Steps: 0");
+    txtSteps.SetString("Steps\n  0\n\nGP\n  0");
     txtSteps.SetCharacterSize(10);
     txtSteps.SetColor(sf::Color(255, 255, 255));
+
+    sprCursor.SetImage(ImageManager::GetImage("menuCursor.png"));
+    curSelection = 1;
+}
+
+void PlayerMenu::Keypressed(sf::Key::Code key)
+{
+    if(key == sf::Key::Down) {
+        curSelection += 1;
+        if(curSelection > 5) {
+            curSelection = 1;
+        }
+    }
+    else if(key == sf::Key::Up) {
+        curSelection -= 1;
+        if(curSelection < 1) {
+            curSelection = 5;
+        }
+    }
+
+    if(key == sf::Key::X) {
+        if(curSelection == 5) {
+            mApp->Close();
+        }
+    }
 }
 
 void PlayerMenu::Update(const float& dt)
 {
     sf::View uiView = mApp->GetView();
+    txtMenuItms.SetPosition(uiView.GetSize().x * 0.6666f + 4.0f, 2.0f);
     // Update Steps string
     std::stringstream ssSteps;
-    ssSteps << "Steps: " << mPlayer->GetSteps();
+    ssSteps << "Steps\n  " << mPlayer->GetSteps() << "\n\nGP\n  1337";
     txtSteps.SetString(ssSteps.str());
-    txtSteps.SetPosition(uiView.GetSize().x - txtSteps.GetRect().Width - 2.0f, uiView.GetSize().y - txtSteps.GetRect().Height - 2.0f);
+    txtSteps.SetPosition(uiView.GetSize().x * 0.6666f + 4.0f, uiView.GetSize().y * 0.6666f + 2.0f);
+    // Update cursor position
+    sprCursor.SetPosition(uiView.GetSize().x * 0.6666f - 16.0f, (curSelection - 1) * 12 + 2);
 }
 
 void PlayerMenu::Draw()
 {
     sf::View uiView = mApp->GetView();
-    mApp->Draw(sf::Shape::Rectangle(0.0f, 0.0f, uiView.GetSize().x, uiView.GetSize().y, sf::Color(0, 0, 0)));
-    mApp->Draw(sf::Shape::Line(uiView.GetSize().x * 0.75f, 0.0f, uiView.GetSize().x * 0.75f, uiView.GetSize().y, 1.0f, sf::Color(255, 255, 255)));
+    // Menu BG
+    mApp->Draw(sf::Shape::Rectangle(2.0f, 2.0f, uiView.GetSize().x - 4, uiView.GetSize().y - 4, sf::Color(41, 40, 132), 2.0f, sf::Color(192, 192, 192)));
+    // Menu items BG
+    mApp->Draw(sf::Shape::Rectangle(uiView.GetSize().x * 0.6666f, 2.0f, uiView.GetSize().x * 0.3333f - 2.0f, uiView.GetSize().y * 0.6666f - 4.0f, sf::Color(41, 40, 132), 2.0f, sf::Color(192, 192, 192)));
+    // Steps and GP BG
+    mApp->Draw(sf::Shape::Rectangle(uiView.GetSize().x * 0.6666f, uiView.GetSize().y * 0.6666f, uiView.GetSize().x * 0.3333f - 2.0f, uiView.GetSize().y * 0.3333f - 2.0f, sf::Color(41, 40, 132), 2.0f, sf::Color(192, 192, 192)));
+    mApp->Draw(txtMenuItms);
     mApp->Draw(txtSteps);
+    // Cursor
+    mApp->Draw(sprCursor);
 }

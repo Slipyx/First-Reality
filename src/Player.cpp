@@ -22,12 +22,13 @@
  */
 
 #include "Player.hpp"
+#include "ImageManager.hpp"
 #include "irrxml/irrXML.h"
 #include <iostream>
 
 Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Actor(app, map)
 {
-    imgSheet.LoadFromFile("images/playerSheet.png");
+    imgSheet = ImageManager::GetImage("playerSheet.png");
     sprPlayer.SetImage(imgSheet);
     tWidth = 16;
     tHeight = 24;

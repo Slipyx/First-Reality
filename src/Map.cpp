@@ -23,6 +23,7 @@
 
 #include "Map.hpp"
 #include "Player.hpp"
+#include "ImageManager.hpp"
 //#include "Randomizer.hpp"
 #include <iostream>
 #include "irrxml/irrXML.h"
@@ -50,7 +51,7 @@ Map::Map(sf::RenderWindow& app, sf::View& gView, std::string fileName)
             }
             else if(!strcmp("tileset", xml->getNodeName())) {
                 std::string tilesetFile = xml->getAttributeValue("file");
-                imgTileset.LoadFromFile("images/" + tilesetFile);
+                imgTileset = ImageManager::GetImage(tilesetFile);
                 sprTile.SetImage(imgTileset);
             }
             else if(!strcmp("playerstart", xml->getNodeName())) {
@@ -120,6 +121,9 @@ void Map::Keypressed(sf::Key::Code key)
 {
     if(key == sf::Key::Q) {
         bShowPlayerMenu = !bShowPlayerMenu;
+    }
+    if(bShowPlayerMenu) {
+        playerMenu->Keypressed(key);
     }
 }
 

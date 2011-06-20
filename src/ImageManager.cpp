@@ -21,31 +21,28 @@
  * distribution.
  */
 
-#ifndef PLAYER_MENU_H
-#define PLAYER_MENU_H
+#include "ImageManager.hpp"
+#include <iostream>
 
-#include <SFML/Graphics.hpp>
-#include "Actor.hpp"
+std::map<std::string, sf::Image> mImages;
 
-class Player;
-
-class PlayerMenu
+const sf::Image& ImageManager::GetImage(const std::string& file)
 {
-public:
-    PlayerMenu(sf::RenderWindow& app, Player* player);
-    void Keypressed(sf::Key::Code key);
-    void Update(const float& dt);
-    void Draw();
+    for(std::map<std::string, sf::Image>::const_iterator it = mImages.begin(); it != mImages.end(); ++it) {
+        if(file == it->first) {
+            std::cout << "Using existing image...\n";
+            return it->second;
+        }
+    }
 
-private:
-    sf::RenderWindow* mApp;
-    Player* mPlayer;
+    sf::Image image;
+    if(image.LoadFromFile("images/" + file)) {
+        mImages[file] = image;
+        std::cout << "Loaded new image...\n";
+        return mImages[file];
+    }
 
-    sf::Text txtMenuItms;
-    sf::Text txtSteps;
-
-    sf::Sprite sprCursor;
-    char curSelection;
-};
-
-#endif
+    std::cout << "ERROR: Image not found!\n";
+    mImages[file] = image;
+    return mImages[file];
+}
