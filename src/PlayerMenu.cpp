@@ -26,6 +26,7 @@
 #include "ImageManager.hpp"
 #include "FontManager.hpp"
 #include <sstream>
+#include <iomanip>
 
 PlayerMenu::PlayerMenu(sf::RenderWindow& app, Player* player)
 {
@@ -38,7 +39,7 @@ PlayerMenu::PlayerMenu(sf::RenderWindow& app, Player* player)
     txtMenuItms.SetColor(sf::Color(255, 255, 255));
 
     txtSteps.SetFont(FontManager::GetFont("DroidSans.ttf"));
-    txtSteps.SetString("Steps\n  0\n\nGP\n  0");
+    //txtSteps.SetString("foo");
     txtSteps.SetCharacterSize(10);
     txtSteps.SetColor(sf::Color(255, 255, 255));
 
@@ -74,11 +75,12 @@ void PlayerMenu::Update(const float& dt)
     txtMenuItms.SetPosition(uiView.GetSize().x * 0.6666f + 4.0f, 2.0f);
     // Update Steps string
     std::stringstream ssSteps;
-    ssSteps << "Steps\n  " << mPlayer->GetSteps() << "\n\nGP\n  1337";
+    ssSteps << "Time\n  0:" << std::setfill('0') << std::setw(2) << mPlayer->GetTime() / 60000
+    << "\nSteps\n  " << mPlayer->GetSteps() << "\nGP\n  " << mPlayer->GetGP();
     txtSteps.SetString(ssSteps.str());
     txtSteps.SetPosition(uiView.GetSize().x * 0.6666f + 4.0f, uiView.GetSize().y * 0.6666f + 2.0f);
     // Update cursor position
-    sprCursor.SetPosition(uiView.GetSize().x * 0.6666f - 16.0f, (curSelection - 1) * 12 + 2);
+    sprCursor.SetPosition(uiView.GetSize().x * 0.6666f - 16.0f, (curSelection - 1) * 12 + 2.0f);
 }
 
 void PlayerMenu::Draw()

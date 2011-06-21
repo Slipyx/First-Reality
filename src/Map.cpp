@@ -154,6 +154,7 @@ void Map::Update(const float& dt)
 
         mGView->SetCenter(boundedCenter);
     }
+    player->UpdateTimer(dt);
 }
 
 void Map::Draw()

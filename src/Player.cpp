@@ -43,7 +43,10 @@ Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Ac
     mSpeed.x = 64.0f, mSpeed.y = 64.0f;
     mPos.x = startX, mPos.y = startY;
     mTargetPos = mPos;
+    // Initialize stats
+    mTime = 0;
 	mSteps = 0;
+	mGP = 0;
     sprPlayer.SetPosition(mPos + sf::Vector2f(-(tWidth / 2.0f), -float(tHeight)));
 
     // ********************************
@@ -143,6 +146,11 @@ void Player::Update(const float& dt)
         sprPlayer.SetPosition(mPos + sf::Vector2f(-(tWidth / 2.0f), -float(tHeight)));
 		//std::cout << "Steps: " << mSteps << '\n';
     }
+}
+
+void Player::UpdateTimer(const float& dt)
+{
+    mTime += dt * 1000;
 }
 
 void Player::Draw()

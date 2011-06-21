@@ -38,10 +38,13 @@ public:
     virtual ~Player();
 
     virtual void Update(const float& dt);
+    void UpdateTimer(const float& dt);
     virtual void Draw();
 
     // Gets and Sets
+    unsigned int GetTime() { return mTime; }
     unsigned short GetSteps() { return mSteps; }
+    unsigned int GetGP() { return mGP; }
 
 private:
     sf::Image imgSheet;
@@ -50,7 +53,10 @@ private:
     sf::Vector2f mSpeed;
     sf::Vector2f mTargetPos;
     eFacingDir mFacingDir;
+    // Stats
+    unsigned int mTime;
 	unsigned short mSteps;
+	unsigned int mGP;
 
     std::vector<Animation*> animSet;
     Animation* curAnim;
