@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="22" height="17" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="tileset01" tilewidth="16" tileheight="16">
-  <image source="../images/tileset01.png" width="128" height="128"/>
+  <image source="../images/tilesets/tileset01.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="65" name="collisionTileset" tilewidth="16" tileheight="16">
-  <image source="../images/collisionTileset.png" width="128" height="16"/>
+  <image source="../images/tilesets/collisionTileset.png" width="128" height="16"/>
  </tileset>
  <layer name="Background" width="22" height="17">
   <data encoding="csv">
