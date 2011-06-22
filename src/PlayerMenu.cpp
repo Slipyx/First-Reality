@@ -43,7 +43,7 @@ PlayerMenu::PlayerMenu(sf::RenderWindow& app, Player* player)
     txtSteps.SetCharacterSize(10);
     txtSteps.SetColor(sf::Color(255, 255, 255));
 
-    sprCursor.SetImage(ImageManager::GetImage("menuCursor.png"));
+    sprCursor.SetImage(ImageManager::GetImage("gui/menuCursor.png"));
     curSelection = 1;
 }
 

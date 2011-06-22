@@ -51,7 +51,7 @@ Map::Map(sf::RenderWindow& app, sf::View& gView, std::string fileName)
             }
             else if(!strcmp("tileset", xml->getNodeName())) {
                 std::string tilesetFile = xml->getAttributeValue("file");
-                imgTileset = ImageManager::GetImage(tilesetFile);
+                imgTileset = ImageManager::GetImage("tilesets/" + tilesetFile);
                 sprTile.SetImage(imgTileset);
             }
             else if(!strcmp("playerstart", xml->getNodeName())) {

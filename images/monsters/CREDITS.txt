@@ -1,0 +1,5 @@
+slimes.png
+  * Other than green recolorings done by Josh K
+  - License: CC-BY 3.0
+  - By: Redshrike (Stephen Challener)
+  - Source: http://opengameart.org/content/10-basic-rpg-enemies

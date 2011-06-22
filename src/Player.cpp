@@ -28,7 +28,7 @@
 
 Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Actor(app, map)
 {
-    imgSheet = ImageManager::GetImage("playerSheet.png");
+    imgSheet = ImageManager::GetImage("characters/playerSheet.png");
     sprPlayer.SetImage(imgSheet);
     tWidth = 16;
     tHeight = 24;
@@ -150,7 +150,7 @@ void Player::Update(const float& dt)
 
 void Player::UpdateTimer(const float& dt)
 {
-    mTime += dt * 1000;
+    mTime += unsigned int(dt * 1000);
 }
 
 void Player::Draw()
