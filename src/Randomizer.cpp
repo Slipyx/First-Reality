@@ -22,48 +22,69 @@
  */
 
 #include "Randomizer.hpp"
-#include <ctime>
+#include <stdint.h>
+#include <cmath>
 
-static unsigned long s1 = 0xFFFFFF;
-static unsigned long s2 = 0xCCCCCC;
-static unsigned long s3 = 0xFF00FF;
+static struct RandomState {
+    uint64_t gen[4];
+    int valid;
+} rs;
 
-static int FastFloor(double x)
+typedef union { uint64_t u64; double d; } U64double;
+
+#define U64x(hi, lo) (((uint64_t)0x##hi << 32) + (uint64_t)0x##lo)
+
+#define TW223_GEN(i, k, q, s) \
+    z = rs.gen[i]; \
+    z = (((z << q) ^ z) >> (k - s)) ^ ((z & ((uint64_t)(int64_t) - 1 << (64 - k))) << s); \
+    r ^= z; rs.gen[i] = z;
+
+/*static int FastFloor(double x)
 {
     return x > 0 ? (int)x : (int)x - 1;
+}*/
+
+// Returns double in range 1.0 <= d < 2.0
+static uint64_t RandomStep()
+{
+    uint64_t z, r = 0;
+    TW223_GEN(0, 63, 31, 18)
+    TW223_GEN(1, 58, 19, 28)
+    TW223_GEN(2, 55, 24, 7)
+    TW223_GEN(3, 47, 21, 8)
+    return (r & U64x(000FFFFF, FFFFFFFF)) | U64x(3FF00000, 00000000);
 }
 
-void Randomizer::Seed()
+void Randomizer::Seed(double d)
 {
-    s1 = (69069 * time(NULL)) & 0xFFFFFFFF;
-    if(s1 < 2) s1 += 2;
-    s2 = (69069 * s1) & 0xFFFFFFFF;
-    if(s2 < 8) s2 += 8;
-    s3 = (69069 * s2) & 0xFFFFFFFF;
-    if(s3 < 16) s3 += 16;
+    rs.valid = 0;
+
+    uint32_t r = 0x11090601;
+    for(int i = 0; i < 4; ++i) {
+        U64double u;
+        uint32_t m = 1u << (r & 255);
+        r >>= 8;
+        u.d = d = d * 3.14159265358979323846 + 2.7182818284590452354;
+        if(u.u64 < m) u.u64 += m;
+        rs.gen[i] = u.u64;
+    }
+    rs.valid = 1;
+    for(int i = 0; i < 10; ++i) RandomStep();
 }
 
-double Randomizer::RandomUnit()
+double Randomizer::Random()
 {
-    s1 = ((s1 & 4294967294) << 12) ^ (((s1 << 13) ^ s1) >> 19);
-    s2 = ((s2 & 4294967288) << 4) ^ (((s2 << 2) ^ s2) >> 25);
-    s3 = ((s3 & 4294967280) << 17) ^ (((s3 << 3) ^ s3) >> 11);
-    //double r = (s1 ^ s2 ^ s3) * 2.3283064365e-10;
-    //return r < 0.0 ? r += 1 : r;
-    return (s1 ^ s2 ^ s3) * 2.3283064365e-10;
+    U64double u;
+    u.u64 = RandomStep();
+    return u.d - 1.0;
+}
+
+int Randomizer::Random(int rMin, int rMax)
+{
+    return static_cast<int>(floor(Random() * (rMax - rMin + 1)) + rMin);
 }
 
 double Randomizer::RandomSymmetric()
 {
-    return 2.0 * RandomUnit() - 1.0;
-}
-
-double Randomizer::RandomRange(double rMin, double rMax)
-{
-    return (rMax - rMin) * RandomUnit() + rMin;
-}
-
-int Randomizer::RandomRange(int rMin, int rMax)
-{
-    return static_cast<int>(FastFloor(RandomUnit() * (rMax - rMin + 1)) + rMin);
+    return 2.0 * Random() - 1.0;
 }

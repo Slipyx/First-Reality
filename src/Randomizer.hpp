@@ -27,11 +27,10 @@
 class Randomizer
 {
 public:
-    static void Seed();
-    static double RandomUnit();
+    static void Seed(double d);
+    static double Random();
+    static int Random(int rMin, int rMax);
     static double RandomSymmetric();
-    static double RandomRange(double rMin, double rMax);
-    static int RandomRange(int rMin, int rMax);
 };
 
 #endif

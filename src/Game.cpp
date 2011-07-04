@@ -30,7 +30,7 @@
 Game::Game(int appWidth, int appHeight)
 {
     // Seed random
-    Randomizer::Seed();
+    Randomizer::Seed(double(time(NULL)));
     // Init window
     app.Create(sf::VideoMode(appWidth, appHeight, 32), "Project First Reality", sf::Style::Close);
     app.SetFramerateLimit(60);
@@ -78,7 +78,7 @@ void Game::Update(const float& dt)
             map->Keypressed(event.Key.Code);
             if(event.Key.Code == sf::Key::A)
             {
-                std::cout << Randomizer::RandomRange(0, 255) << '\n';
+                std::cout << Randomizer::Random(0, 255) << '\n';
             }
         }
     }
