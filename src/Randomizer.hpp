@@ -28,9 +28,9 @@ class Randomizer
 {
 public:
     static void Seed();
-    static float RandomUnit();
-    static float RandomSymmetric();
-    static float RandomRange(float rMin, float rMax);
+    static double RandomUnit();
+    static double RandomSymmetric();
+    static double RandomRange(double rMin, double rMax);
     static int RandomRange(int rMin, int rMax);
 };
 

@@ -22,31 +22,48 @@
  */
 
 #include "Randomizer.hpp"
-#include <cstdlib>
 #include <ctime>
-#include <cmath>
+
+static unsigned long s1 = 0xFFFFFF;
+static unsigned long s2 = 0xCCCCCC;
+static unsigned long s3 = 0xFF00FF;
+
+static int FastFloor(double x)
+{
+    return x > 0 ? (int)x : (int)x - 1;
+}
 
 void Randomizer::Seed()
 {
-    srand(static_cast<unsigned int>(time(NULL))); rand();
+    s1 = (69069 * time(NULL)) & 0xFFFFFFFF;
+    if(s1 < 2) s1 += 2;
+    s2 = (69069 * s1) & 0xFFFFFFFF;
+    if(s2 < 8) s2 += 8;
+    s3 = (69069 * s2) & 0xFFFFFFFF;
+    if(s3 < 16) s3 += 16;
 }
 
-float Randomizer::RandomUnit()
+double Randomizer::RandomUnit()
 {
-    return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    s1 = ((s1 & 4294967294) << 12) ^ (((s1 << 13) ^ s1) >> 19);
+    s2 = ((s2 & 4294967288) << 4) ^ (((s2 << 2) ^ s2) >> 25);
+    s3 = ((s3 & 4294967280) << 17) ^ (((s3 << 3) ^ s3) >> 11);
+    //double r = (s1 ^ s2 ^ s3) * 2.3283064365e-10;
+    //return r < 0.0 ? r += 1 : r;
+    return (s1 ^ s2 ^ s3) * 2.3283064365e-10;
 }
 
-float Randomizer::RandomSymmetric()
+double Randomizer::RandomSymmetric()
 {
-    return 2.0f * RandomUnit() - 1.0f;
+    return 2.0 * RandomUnit() - 1.0;
 }
 
-float Randomizer::RandomRange(float rMin, float rMax)
+double Randomizer::RandomRange(double rMin, double rMax)
 {
     return (rMax - rMin) * RandomUnit() + rMin;
 }
 
 int Randomizer::RandomRange(int rMin, int rMax)
 {
-    return static_cast<int>(floor(RandomUnit() * (rMax - rMin + 1)) + rMin); // What Lua uses
+    return static_cast<int>(FastFloor(RandomUnit() * (rMax - rMin + 1)) + rMin);
 }
