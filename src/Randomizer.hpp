@@ -30,7 +30,6 @@ public:
     static void Seed(double d);
     static double Random();
     static int Random(int rMin, int rMax);
-    static double RandomSymmetric();
 };
 
 #endif

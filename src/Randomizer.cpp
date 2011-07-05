@@ -23,7 +23,7 @@
 
 #include "Randomizer.hpp"
 #include <stdint.h>
-#include <cmath>
+#include <emmintrin.h>
 
 static struct RandomState {
     uint64_t gen[4];
@@ -39,10 +39,11 @@ typedef union { uint64_t u64; double d; } U64double;
     z = (((z << q) ^ z) >> (k - s)) ^ ((z & ((uint64_t)(int64_t) - 1 << (64 - k))) << s); \
     r ^= z; rs.gen[i] = z;
 
-/*static int FastFloor(double x)
+static inline int FastFloor(const double d)
 {
-    return x > 0 ? (int)x : (int)x - 1;
-}*/
+    int di = _mm_cvttsd_si32(_mm_load_sd(&d));
+    return d > 0 ? di : di - 1;
+}
 
 // Returns double in range 1.0 <= d < 2.0
 static uint64_t RandomStep()
@@ -81,10 +82,5 @@ double Randomizer::Random()
 
 int Randomizer::Random(int rMin, int rMax)
 {
-    return static_cast<int>(floor(Random() * (rMax - rMin + 1)) + rMin);
-}
-
-double Randomizer::RandomSymmetric()
-{
-    return 2.0 * Random() - 1.0;
+    return FastFloor(Random() * (rMax - rMin + 1)) + rMin;
 }
