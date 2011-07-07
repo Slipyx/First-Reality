@@ -117,9 +117,9 @@ Map::Map(sf::RenderWindow& app, sf::View& gView, std::string fileName)
     std::cout << "Map loaded in " << mapLoadTimer.GetElapsedTime() << " ms!\n";
 }
 
-void Map::Keypressed(sf::Key::Code key)
+void Map::Keypressed(sf::Keyboard::Key key)
 {
-    if(key == sf::Key::Q) {
+    if(key == sf::Keyboard::Key::Q) {
         bShowPlayerMenu = !bShowPlayerMenu;
     }
     if(bShowPlayerMenu) {

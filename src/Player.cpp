@@ -80,27 +80,25 @@ Player::Player(sf::RenderWindow& app, Map* map, float startX, float startY) : Ac
 void Player::Update(const float& dt)
 {
     curAnim->Update(dt);
-    // Capture input system
-    const sf::Input& mInput = mApp->GetInput();
     // Check for input and adjust target pos
     if(mPos == mTargetPos) {
         // Input
-        if(mInput.IsKeyDown(sf::Key::Left)) {
+        if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Left)) {
             mTargetPos.x = mPos.x - Map::TILE_SIZE;
             mFacingDir = FACING_LEFT;
             sprPlayer.FlipX(false);
         }
-        else if(mInput.IsKeyDown(sf::Key::Right)) {
+        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Right)) {
             mTargetPos.x = mPos.x + Map::TILE_SIZE;
             mFacingDir = FACING_RIGHT;
             sprPlayer.FlipX(true);
         }
-        else if(mInput.IsKeyDown(sf::Key::Up)) {
+        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Up)) {
             mTargetPos.y = mPos.y - Map::TILE_SIZE;
             mFacingDir = FACING_UP;
             sprPlayer.FlipX(false);
         }
-        else if(mInput.IsKeyDown(sf::Key::Down)) {
+        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Down)) {
             mTargetPos.y = mPos.y + Map::TILE_SIZE;
             mFacingDir = FACING_DOWN;
             sprPlayer.FlipX(false);

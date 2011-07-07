@@ -76,14 +76,12 @@ void Game::Update(const float& dt)
         {
             // Fire keypressed callbacks
             map->Keypressed(event.Key.Code);
-            if(event.Key.Code == sf::Key::A)
+            if(event.Key.Code == sf::Keyboard::Key::A)
             {
                 std::cout << Randomizer::Random(0, 255) << '\n';
             }
         }
     }
-    // Capture input system
-    //const sf::Input& mInput = app.GetInput();
 
     // Update other objects
     map->Update(dt);

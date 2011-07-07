@@ -33,7 +33,7 @@ class PlayerMenu
 {
 public:
     PlayerMenu(sf::RenderWindow& app, Player* player);
-    void Keypressed(sf::Key::Code key);
+    void Keypressed(sf::Keyboard::Key key);
     void Update(const float& dt);
     void Draw();
 

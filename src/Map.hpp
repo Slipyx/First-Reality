@@ -40,7 +40,7 @@ public:
 
     static const unsigned char TILE_SIZE = 16;
 
-    void Keypressed(sf::Key::Code key);
+    void Keypressed(sf::Keyboard::Key key);
     void Update(const float& dt);
     void Draw();
     void DrawUI();

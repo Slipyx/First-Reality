@@ -47,22 +47,22 @@ PlayerMenu::PlayerMenu(sf::RenderWindow& app, Player* player)
     curSelection = 1;
 }
 
-void PlayerMenu::Keypressed(sf::Key::Code key)
+void PlayerMenu::Keypressed(sf::Keyboard::Key key)
 {
-    if(key == sf::Key::Down) {
+    if(key == sf::Keyboard::Key::Down) {
         curSelection += 1;
         if(curSelection > 5) {
             curSelection = 1;
         }
     }
-    else if(key == sf::Key::Up) {
+    else if(key == sf::Keyboard::Key::Up) {
         curSelection -= 1;
         if(curSelection < 1) {
             curSelection = 5;
         }
     }
 
-    if(key == sf::Key::X) {
+    if(key == sf::Keyboard::Key::X) {
         if(curSelection == 5) {
             mApp->Close();
         }
