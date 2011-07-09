@@ -22,27 +22,23 @@
  */
 
 #include "Randomizer.hpp"
-#include <stdint.h>
 #include <emmintrin.h>
 
-static struct RandomState {
-    uint64_t gen[4];
-    int valid;
-} rs;
+static uint64_t gen[4] = {0xFFFFFFFF,0xCCCCCCCC,0xFF0000FF,0xCC0000CC};
 
 typedef union { uint64_t u64; double d; } U64double;
 
 #define U64x(hi, lo) (((uint64_t)0x##hi << 32) + (uint64_t)0x##lo)
 
 #define TW223_GEN(i, k, q, s) \
-    z = rs.gen[i]; \
+    z = gen[i]; \
     z = (((z << q) ^ z) >> (k - s)) ^ ((z & ((uint64_t)(int64_t) - 1 << (64 - k))) << s); \
-    r ^= z; rs.gen[i] = z;
+    r ^= z; gen[i] = z;
 
-static inline int FastFloor(const double d)
+static inline int32_t FastFloor(const double& d)
 {
-    int di = _mm_cvttsd_si32(_mm_load_sd(&d));
-    return d > 0 ? di : di - 1;
+    int32_t di = _mm_cvttsd_si32(_mm_load_sd(&d));
+    return d > 0.0 || d == di ? di : di - 1;
 }
 
 // Returns double in range 1.0 <= d < 2.0
@@ -58,19 +54,16 @@ static uint64_t RandomStep()
 
 void Randomizer::Seed(double d)
 {
-    rs.valid = 0;
-
     uint32_t r = 0x11090601;
-    for(int i = 0; i < 4; ++i) {
+    for(uint8_t i = 0; i < 4; ++i) {
         U64double u;
         uint32_t m = 1u << (r & 255);
         r >>= 8;
         u.d = d = d * 3.14159265358979323846 + 2.7182818284590452354;
         if(u.u64 < m) u.u64 += m;
-        rs.gen[i] = u.u64;
+        gen[i] = u.u64;
     }
-    rs.valid = 1;
-    for(int i = 0; i < 10; ++i) RandomStep();
+    for(uint8_t i = 0; i < 10; ++i) RandomStep();
 }
 
 double Randomizer::Random()
@@ -80,7 +73,7 @@ double Randomizer::Random()
     return u.d - 1.0;
 }
 
-int Randomizer::Random(int rMin, int rMax)
+int32_t Randomizer::Random(int32_t rMin, int32_t rMax)
 {
     return FastFloor(Random() * (rMax - rMin + 1)) + rMin;
 }

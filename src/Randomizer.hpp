@@ -24,12 +24,14 @@
 #ifndef RANDOMIZER_H
 #define RANDOMIZER_H
 
+#include <cstdint>
+
 class Randomizer
 {
 public:
     static void Seed(double d);
     static double Random();
-    static int Random(int rMin, int rMax);
+    static int32_t Random(int32_t rMin, int32_t rMax);
 };
 
 #endif
