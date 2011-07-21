@@ -119,7 +119,7 @@ Map::Map(sf::RenderWindow& app, sf::View& gView, std::string fileName)
 
 void Map::Keypressed(sf::Keyboard::Key key)
 {
-    if(key == sf::Keyboard::Key::Q) {
+    if(key == sf::Keyboard::Q) {
         bShowPlayerMenu = !bShowPlayerMenu;
     }
     if(bShowPlayerMenu) {

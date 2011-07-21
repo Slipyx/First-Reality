@@ -83,22 +83,22 @@ void Player::Update(const float& dt)
     // Check for input and adjust target pos
     if(mPos == mTargetPos) {
         // Input
-        if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Left)) {
+        if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Left)) {
             mTargetPos.x = mPos.x - Map::TILE_SIZE;
             mFacingDir = FACING_LEFT;
             sprPlayer.FlipX(false);
         }
-        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Right)) {
+        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Right)) {
             mTargetPos.x = mPos.x + Map::TILE_SIZE;
             mFacingDir = FACING_RIGHT;
             sprPlayer.FlipX(true);
         }
-        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Up)) {
+        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Up)) {
             mTargetPos.y = mPos.y - Map::TILE_SIZE;
             mFacingDir = FACING_UP;
             sprPlayer.FlipX(false);
         }
-        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Key::Down)) {
+        else if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Down)) {
             mTargetPos.y = mPos.y + Map::TILE_SIZE;
             mFacingDir = FACING_DOWN;
             sprPlayer.FlipX(false);

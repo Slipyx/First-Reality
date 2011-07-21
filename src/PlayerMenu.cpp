@@ -49,20 +49,20 @@ PlayerMenu::PlayerMenu(sf::RenderWindow& app, Player* player)
 
 void PlayerMenu::Keypressed(sf::Keyboard::Key key)
 {
-    if(key == sf::Keyboard::Key::Down) {
+    if(key == sf::Keyboard::Down) {
         curSelection += 1;
         if(curSelection > 5) {
             curSelection = 1;
         }
     }
-    else if(key == sf::Keyboard::Key::Up) {
+    else if(key == sf::Keyboard::Up) {
         curSelection -= 1;
         if(curSelection < 1) {
             curSelection = 5;
         }
     }
 
-    if(key == sf::Keyboard::Key::X) {
+    if(key == sf::Keyboard::X) {
         if(curSelection == 5) {
             mApp->Close();
         }
